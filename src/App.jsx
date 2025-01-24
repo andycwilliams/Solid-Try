@@ -1,5 +1,6 @@
 import { useState } from "react";
 import "./App.css";
+import Login from "./components/Login";
 
 const App = () => {
   // eslint-disable-next-line no-unused-vars
@@ -11,7 +12,9 @@ const App = () => {
       <div>
         <p>Please sign in to your Solid account.</p>
         <p>Note: Provider must be solidcommunity.net</p>
-        <button>Sign In</button>
+        <Login />
+        {/* <button>Sign In</button> */}
+        
       </div>
       <div>
         <p>Here are the contents of your Solid account:</p>
