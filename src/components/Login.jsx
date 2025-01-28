@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
-import { Session } from "@inrupt/solid-client-authn-browser";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
-const Login = () => {
+const Login = ({ session }) => {
   const [checkIsLoggedIn, setCheckIsLoggedIn] = useState(false);
   const [webId, setWebId] = useState("");
-  const session = useMemo(() => new Session(), []);
 
   const handleLogin = async () => {
     const identityProvider = "https://solidcommunity.net/";
@@ -43,8 +42,13 @@ const Login = () => {
       <button onClick={handleLogin} disabled={checkIsLoggedIn}>
         {checkIsLoggedIn ? `Logged in as ${webId}` : "Log in"}
       </button>
+      <p>Note: Provider must be solidcommunity.net</p>
     </div>
   );
+};
+
+Login.propTypes = {
+  session: PropTypes.object.isRequired,
 };
 
 export default Login;

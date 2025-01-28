@@ -1,24 +1,22 @@
-import { useState } from "react";
-import "./App.css";
+import { useMemo } from "react";
+import { Session } from "@inrupt/solid-client-authn-browser";
+// import "./App.css";
 import Login from "./components/Login";
+import PodContents from "./components/PodContents";
 
 const App = () => {
-  // eslint-disable-next-line no-unused-vars
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const session = useMemo(() => new Session(), []);
 
   return (
     <>
       <h1>Solid Try</h1>
       <div>
-        <p>Please sign in to your Solid account.</p>
-        <p>Note: Provider must be solidcommunity.net</p>
-        <Login />
-        {/* <button>Sign In</button> */}
-        
+        <Login session={session} />
+        {/* <Logout session={session} /> */}
       </div>
       <div>
         <p>Here are the contents of your Solid account:</p>
-        {isLoggedIn ? <p>Your content</p> : <p>Please log in first</p>}
+        <PodContents session={session} />
       </div>
     </>
   );
