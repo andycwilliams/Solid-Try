@@ -1,10 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getSolidDataset,
-  getThing,
-  getThingAll,
-  getUrlAll,
-} from "@inrupt/solid-client";
+import { getSolidDataset, getThingAll, getUrlAll } from "@inrupt/solid-client";
 import PropTypes from "prop-types";
 
 const PodContents = ({ session }) => {
@@ -13,9 +8,12 @@ const PodContents = ({ session }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    // if (!session.info.isLoggedIn) return;
+
     const fetchPodContents = async () => {
       try {
         setLoading(true);
+        setError("");
 
         if (!session.info.isLoggedIn) {
           setError("You need to log in to view your Pod contents.");
@@ -28,25 +26,24 @@ const PodContents = ({ session }) => {
         const solidDataset = await getSolidDataset(podUrl, {
           fetch: session.fetch,
         });
-        console.log(solidDataset);
+        // console.log("solidDataset", solidDataset);
 
         const allThings = getThingAll(solidDataset);
-        console.log("allThings", allThings);
+        // console.log("allThings", allThings);
 
         const contents = allThings.map((thing) => {
-          const url = getThing(solidDataset, thing.url);
-          console.log("url", url);
+          // console.log("url", url);
           return {
             url: thing.url,
-            titles: getUrlAll(url, "http://purl.org/dc/terms/title"),
+            titles: getUrlAll(thing, "http://purl.org/dc/terms/title"),
           };
         });
-        console.log("contents", contents);
+        // console.log("contents", contents);
 
         setPodContents(contents);
         setError("");
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching Pod contents:", err);
         setError("Failed to load contents. Please try again.");
       } finally {
         setLoading(false);
@@ -68,8 +65,7 @@ const PodContents = ({ session }) => {
             podContents.map((content, index) => (
               <li key={index}>
                 <a href={content.url} target="_blank" rel="noopener noreferrer">
-                  {/* {content.titles[0] || content.url} */}
-                  {content}
+                  {content.titles[0] || content.url}
                 </a>
               </li>
             ))

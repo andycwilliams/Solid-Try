@@ -1,50 +1,48 @@
 import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
-const Login = ({ session }) => {
-  const [checkIsLoggedIn, setCheckIsLoggedIn] = useState(false);
+const Login = ({ session, setIsLoggedIn }) => {
   const [webId, setWebId] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   const handleLogin = async () => {
     const identityProvider = "https://solidcommunity.net/";
 
-    await session.login({
-      oidcIssuer: identityProvider,
-      redirectUrl: window.location.href,
-      clientName: "Solid Try",
-    });
+    try {
+      setLoginError("");
+      await session.login({
+        oidcIssuer: identityProvider,
+        redirectUrl: window.location.href,
+        clientName: "Solid Try",
+      });
+    } catch (error) {
+      console.error("Login failed:", error);
+      setLoginError("Login failed. Please try again.");
+    }
   };
 
   const handleLogout = async () => {
     await session.logout();
-    window.location.reload();
+    setIsLoggedIn(false);
+    setWebId("");
   };
 
   useEffect(() => {
     const checkSession = async () => {
-      if (window.location.href.includes("code=")) {
-        await session.handleIncomingRedirect(window.location.href);
-        if (session.info.isLoggedIn) {
-          setCheckIsLoggedIn(true);
-          setWebId(session.info.webId);
-          console.log(`Logged in as ${session.info.webId}`);
-        }
-      } else {
-        await session.handleIncomingRedirect();
-        if (session.info.isLoggedIn) {
-          setCheckIsLoggedIn(true);
-          setWebId(session.info.webId);
-          console.log(`Session restored: Logged in as ${session.info.webId}`);
-        }
+      await session.handleIncomingRedirect();
+      if (session.info.isLoggedIn) {
+        setIsLoggedIn(true);
+        setWebId(session.info.webId);
+        console.log(`Logged in as ${session.info.webId}`);
       }
     };
 
     checkSession();
-  }, [session]);
+  }, [session, setIsLoggedIn]);
 
   return (
     <div>
-      {checkIsLoggedIn ? (
+      {session.info.isLoggedIn ? (
         <div>
           <p>Logged in as: {webId.replace("profile/card#me", "")}</p>
           <button onClick={handleLogout}>Log Out</button>
@@ -53,6 +51,7 @@ const Login = ({ session }) => {
         <div>
           <p>Log in to see your Pod&apos;s contents</p>
           <button onClick={handleLogin}>Log In</button>
+          {loginError && <p style={{ color: "red" }}>{loginError}</p>}
         </div>
       )}
       <p>Note: Provider must be solidcommunity.net</p>
@@ -62,6 +61,7 @@ const Login = ({ session }) => {
 
 Login.propTypes = {
   session: PropTypes.object.isRequired,
+  setIsLoggedIn: PropTypes.func.isRequired,
 };
 
 export default Login;
