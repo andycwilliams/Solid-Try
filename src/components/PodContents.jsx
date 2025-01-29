@@ -28,16 +28,20 @@ const PodContents = ({ session }) => {
         const solidDataset = await getSolidDataset(podUrl, {
           fetch: session.fetch,
         });
+        console.log(solidDataset);
 
         const allThings = getThingAll(solidDataset);
+        console.log("allThings", allThings);
 
         const contents = allThings.map((thing) => {
           const url = getThing(solidDataset, thing.url);
+          console.log("url", url);
           return {
             url: thing.url,
             titles: getUrlAll(url, "http://purl.org/dc/terms/title"),
           };
         });
+        console.log("contents", contents);
 
         setPodContents(contents);
         setError("");
@@ -64,6 +68,7 @@ const PodContents = ({ session }) => {
             podContents.map((content, index) => (
               <li key={index}>
                 <a href={content.url} target="_blank" rel="noopener noreferrer">
+                  {/* {content.titles[0] || content.url} */}
                   {content}
                 </a>
               </li>

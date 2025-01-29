@@ -12,7 +12,6 @@ const App = () => {
       <h1>Solid Try</h1>
       <div>
         <Login session={session} />
-        {/* <Logout session={session} /> */}
       </div>
       <div>
         <p>Here are the contents of your Solid account:</p>

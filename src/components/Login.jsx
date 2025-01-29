@@ -15,6 +15,11 @@ const Login = ({ session }) => {
     });
   };
 
+  const handleLogout = async () => {
+    await session.logout();
+    window.location.reload();
+  };
+
   useEffect(() => {
     const checkSession = async () => {
       if (window.location.href.includes("code=")) {
@@ -39,9 +44,17 @@ const Login = ({ session }) => {
 
   return (
     <div>
-      <button onClick={handleLogin} disabled={checkIsLoggedIn}>
-        {checkIsLoggedIn ? `Logged in as ${webId}` : "Log in"}
-      </button>
+      {checkIsLoggedIn ? (
+        <div>
+          <p>Logged in as: {webId.replace("profile/card#me", "")}</p>
+          <button onClick={handleLogout}>Log Out</button>
+        </div>
+      ) : (
+        <div>
+          <p>Log in to see your Pod&apos;s contents</p>
+          <button onClick={handleLogin}>Log In</button>
+        </div>
+      )}
       <p>Note: Provider must be solidcommunity.net</p>
     </div>
   );
