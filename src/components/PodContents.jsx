@@ -5,7 +5,9 @@ import PropTypes from "prop-types";
 const PodContents = ({ session }) => {
   const [podContents, setPodContents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const [error, setError] = useState(
+    "You need to log in to view your Pod contents."
+  );
 
   useEffect(() => {
     // if (!session.info.isLoggedIn) return;
@@ -54,16 +56,22 @@ const PodContents = ({ session }) => {
   }, [session]);
 
   return (
-    <div>
+    <div className="podContentsContainer">
       {loading && <p>Loading Pod contents...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && (
+        <p
+        // style={{ color: "red" }}
+        >
+          {error}
+        </p>
+      )}
       {!loading && (
-        <ul>
+        <ul className="contentsList">
           {podContents.length === 0 ? (
             <p>No contents found in your Pod.</p>
           ) : (
             podContents.map((content, index) => (
-              <li key={index}>
+              <li key={index} className="contentsListItem">
                 <a href={content.url} target="_blank" rel="noopener noreferrer">
                   {content.titles[0] || content.url}
                 </a>

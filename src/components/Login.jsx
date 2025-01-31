@@ -41,7 +41,7 @@ const Login = ({ session, setIsLoggedIn }) => {
   }, [session, setIsLoggedIn]);
 
   return (
-    <div>
+    <div className="loginContainer">
       {session.info.isLoggedIn ? (
         <div>
           <p>Logged in as: {webId.replace("profile/card#me", "")}</p>

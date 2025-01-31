@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Session } from "@inrupt/solid-client-authn-browser";
-// import "./App.css";
+import "./App.css";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 import Login from "./components/Login";
 import PodContents from "./components/PodContents";
 
@@ -35,21 +37,13 @@ const App = () => {
 
   return (
     <>
-      <h1>Solid Try</h1>
-      <div>
-        <Login session={session} setIsLoggedIn={setIsLoggedIn} />
-      </div>
-      {/* <div>
-        <p>Here are the contents of your Solid account:</p>
-        <PodContents session={session} />
-      </div> */}
+      <Header />
 
-      {isSessionReady && isLoggedIn && (
-        <div>
-          <p>Here are the contents of your Solid account:</p>
-          <PodContents session={session} />
-        </div>
-      )}
+      <Login session={session} setIsLoggedIn={setIsLoggedIn} />
+
+      {isSessionReady && isLoggedIn && <PodContents session={session} />}
+
+      <Footer />
     </>
   );
 };
